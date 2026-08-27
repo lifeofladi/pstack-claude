@@ -19,13 +19,5 @@
     "review",
     "verification",
     "unslop"
-  ],
-  "agents": [
-    "./agents/poteto-agent.md",
-    "./agents/comment-sicko.md",
-    "./agents/panel-correctness.md",
-    "./agents/panel-design.md",
-    "./agents/panel-evidence.md",
-    "./agents/panel-mechanics.md"
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "pstack-claude",
+  "description": "Local marketplace for the Claude Code port of poteto's pstack.",
+  "owner": {
+    "name": "lifeofladi"
+  },
+  "plugins": [
+    {
+      "name": "pstack",
+      "description": "if you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Claude Code port of poteto's pstack.",
+      "author": {
+        "name": "Lauren Tan",
+        "url": "https://x.com/poteto"
+      },
+      "source": "./",
+      "category": "development",
+      "homepage": "https://github.com/cursor/plugins/tree/main/pstack"
+    }
+  ]
+}

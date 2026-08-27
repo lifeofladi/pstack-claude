@@ -28,6 +28,7 @@ BANNED = {
     r"\bdeslop\b": "skill that does not exist here",
     r"\bcreate-skill\b": "Cursor built-in that does not exist here",
     r"\bBugbot\b": "Cursor product name",
+    r"/add-plugin\b": "Cursor install command (use /plugin install)",
     r"\bgeneralPurpose\b": "Cursor subagent type",
     r"`Task` (?:tool|call)": "Cursor tool name (use Agent)",
     r"\bAskQuestion\b": "Cursor tool name (use AskUserQuestion)",
@@ -65,8 +66,37 @@ else:
         for rel in manifest.get("agents", []):
             if not (ROOT / rel.lstrip("./")).exists():
                 errors.append(f"manifest: agents entry not found: {rel}")
+        # Agents, skills and commands are auto-discovered from their directories.
+        # Listing them again registers each one twice, so the manifest stays quiet.
+        for key in ("agents", "skills", "commands"):
+            if key in manifest:
+                warnings.append(
+                    f"manifest: '{key}' duplicates auto-discovery of {key}/")
     except json.JSONDecodeError as exc:
         errors.append(f"manifest: invalid JSON: {exc}")
+
+# --- marketplace ---
+# Without this, `/plugin marketplace add <path>` has nothing to read and the
+# plugin cannot be installed from a local checkout at all.
+market_path = ROOT / ".claude-plugin" / "marketplace.json"
+if not market_path.exists():
+    errors.append(".claude-plugin/marketplace.json is missing "
+                  "(needed to install from a local checkout)")
+else:
+    try:
+        market = json.loads(market_path.read_text())
+        for key in ("name", "owner", "plugins"):
+            if key not in market:
+                errors.append(f"marketplace: missing required key '{key}'")
+        for entry in market.get("plugins", []):
+            src = entry.get("source")
+            if not isinstance(src, str):
+                continue
+            if not (ROOT / src / ".claude-plugin" / "plugin.json").exists():
+                errors.append(
+                    f"marketplace: source '{src}' has no .claude-plugin/plugin.json")
+    except json.JSONDecodeError as exc:
+        errors.append(f"marketplace: invalid JSON: {exc}")
 
 # --- skills ---
 skill_names = set()

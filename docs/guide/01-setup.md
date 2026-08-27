@@ -4,13 +4,15 @@ In this page you install the plugin, pick which models pstack uses, and run your
 
 ## Install the plugin
 
-In a Claude Code chat, run:
+pstack ships its own marketplace manifest, so a local checkout installs in three commands. In a Claude Code chat, run:
 
 ```text
-/add-plugin pstack
+/plugin marketplace add /path/to/pstack-claude
+/plugin install pstack@pstack-claude
+/reload-plugins
 ```
 
-Claude Code confirms the plugin is installed.
+The reload reports what registered. Expect 44 skills and 6 agents. Skills appear as `/pstack:<name>` and the review seats as `pstack:panel-*`.
 
 ## Pick your models
 
