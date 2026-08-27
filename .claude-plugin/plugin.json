@@ -1,0 +1,31 @@
+{
+  "name": "pstack",
+  "version": "0.1.0",
+  "description": "if you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Claude Code port of poteto's pstack.",
+  "author": {
+    "name": "Lauren Tan",
+    "url": "https://x.com/poteto"
+  },
+  "homepage": "https://github.com/cursor/plugins/tree/main/pstack",
+  "repository": "https://github.com/cursor/plugins",
+  "license": "MIT",
+  "keywords": [
+    "pstack",
+    "poteto-mode",
+    "workflow",
+    "principles",
+    "agent-style",
+    "subagents",
+    "review",
+    "verification",
+    "unslop"
+  ],
+  "agents": [
+    "./agents/poteto-agent.md",
+    "./agents/comment-sicko.md",
+    "./agents/panel-correctness.md",
+    "./agents/panel-design.md",
+    "./agents/panel-evidence.md",
+    "./agents/panel-mechanics.md"
+  ]
+}
