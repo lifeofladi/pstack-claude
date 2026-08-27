@@ -60,9 +60,19 @@ if not manifest_path.exists():
 else:
     try:
         manifest = json.loads(manifest_path.read_text())
-        for key in ("name", "version", "description"):
+        for key in ("name", "description"):
             if key not in manifest:
                 errors.append(f"manifest: missing required key '{key}'")
+        # Claude Code compares version strings, not contents. A declared
+        # version that does not change leaves every installed copy pinned to
+        # the cache while `claude plugin update` reports users up to date.
+        # With the field absent the commit SHA becomes the version, so every
+        # push reaches everyone.
+        if "version" in manifest:
+            errors.append(
+                "manifest: remove 'version'. It pins installed users to the "
+                "cached copy until it is bumped; omitting it makes the commit "
+                "SHA the version so every push ships.")
         for rel in manifest.get("agents", []):
             if not (ROOT / rel.lstrip("./")).exists():
                 errors.append(f"manifest: agents entry not found: {rel}")
