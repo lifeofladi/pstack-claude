@@ -24,6 +24,19 @@ To work on the plugin itself, add your checkout instead of the repo:
 
 The reload reports what registered. Expect 44 skills and 6 agents. The plugin is pure markdown plus two small shell scripts; there is nothing to build.
 
+### Turn on auto-update
+
+Claude Code disables auto-update for third-party marketplaces by default, so a fresh install never changes again on its own. Turn it on once:
+
+1. Run `/plugin`.
+2. Go to the **Marketplaces** tab.
+3. Select `pstack-claude`.
+4. Choose **Enable auto-update**.
+
+Claude Code then refreshes after your session starts, within about ten minutes, and prompts you to run `/reload-plugins`. The running session keeps the version it launched with either way.
+
+Without this you stay on the copy you installed until you run `/plugin marketplace update pstack-claude` yourself.
+
 ## Get started
 
 Two steps:

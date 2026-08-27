@@ -4,15 +4,27 @@ In this page you install the plugin, pick which models pstack uses, and run your
 
 ## Install the plugin
 
-pstack ships its own marketplace manifest, so a local checkout installs in three commands. In a Claude Code chat, run:
+pstack ships its own marketplace manifest, so it installs in three commands. In a Claude Code chat, run:
 
 ```text
-/plugin marketplace add /path/to/pstack-claude
+/plugin marketplace add lifeofladi/pstack-claude
 /plugin install pstack@pstack-claude
 /reload-plugins
 ```
 
+To work on the plugin itself, add your checkout in place of the repo:
+
+```text
+/plugin marketplace add /path/to/pstack-claude
+```
+
 The reload reports what registered. Expect 44 skills and 6 agents. Skills appear as `/pstack:<name>` and the review seats as `pstack:panel-*`.
+
+## Turn on auto-update
+
+Claude Code disables auto-update for third-party marketplaces by default. Without this step you keep the copy you installed until you refresh it by hand.
+
+Run `/plugin`, go to the **Marketplaces** tab, select `pstack-claude`, and choose **Enable auto-update**. Claude Code then picks up new versions after your session starts and prompts you to run `/reload-plugins`.
 
 ## Pick your models
 
