@@ -158,6 +158,14 @@ for md in all_md:
                 line = text[:m.start()].count("\n") + 1
                 errors.append(f"{rel}:{line}: {why}: '{m.group(0)}'")
 
+    # `/plugin install pstack` without a marketplace fails: the name is only
+    # unique within one. This check runs on the README too, which the ban
+    # sweep above skips.
+    for m in re.finditer(r"/plugin install pstack(?!@)", text):
+        line = text[:m.start()].count("\n") + 1
+        errors.append(f"{rel}:{line}: install needs a marketplace "
+                      "(use /plugin install pstack@pstack-claude)")
+
     # pstack: subagent references must resolve to a real agent.
     # `pstack:panel-<lens>` and friends are documented templates, not references.
     for m in re.finditer(r"pstack:([a-z-]+)(?!<)", text):

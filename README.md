@@ -8,11 +8,21 @@ The original is a Cursor plugin. This fork keeps the engineering discipline and 
 
 ## Install
 
-```bash
-/plugin install pstack
+In a Claude Code chat:
+
+```text
+/plugin marketplace add lifeofladi/pstack-claude
+/plugin install pstack@pstack-claude
+/reload-plugins
 ```
 
-Or point Claude Code at this directory directly. The plugin is pure markdown plus two small shell scripts; there is nothing to build.
+To work on the plugin itself, add your checkout instead of the repo:
+
+```text
+/plugin marketplace add /path/to/pstack-claude
+```
+
+The reload reports what registered. Expect 44 skills and 6 agents. The plugin is pure markdown plus two small shell scripts; there is nothing to build.
 
 ## Get started
 
