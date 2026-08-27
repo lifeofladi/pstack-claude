@@ -4,7 +4,7 @@ description: Review panel seat three. Runs the thing and checks that every claim
 model: sonnet
 effort: xhigh
 color: green
-tools: Read, Glob, Grep, Bash, Agent(pstack:poteto-agent)
+tools: Read, Glob, Grep, Bash
 ---
 
 # Panel seat: evidence

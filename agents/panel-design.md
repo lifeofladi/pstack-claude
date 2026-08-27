@@ -4,7 +4,7 @@ description: Review panel seat two. Judges shape, simplification, and what the n
 model: fable
 effort: high
 color: blue
-tools: Read, Glob, Grep, Bash, Agent(pstack:poteto-agent)
+tools: Read, Glob, Grep, Bash
 ---
 
 # Panel seat: design and altitude

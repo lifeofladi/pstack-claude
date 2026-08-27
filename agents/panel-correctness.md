@@ -4,7 +4,7 @@ description: Review panel seat one. Hunts edge cases, error paths, concurrency, 
 model: opus
 effort: xhigh
 color: red
-tools: Read, Glob, Grep, Bash, Agent(pstack:poteto-agent)
+tools: Read, Glob, Grep, Bash
 ---
 
 # Panel seat: correctness
