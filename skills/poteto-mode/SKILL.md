@@ -7,7 +7,7 @@ description: poteto's agent style for concise, detailed responses, deliberate su
 
 ## Non-negotiables
 
-**Start every multi-step task with a task list whose first item is to read the Principles section below in full.** Use `TaskCreate` for the list and `TaskUpdate` to move each item through `in_progress` and `completed`. Not seeing those tools does not mean the session lacks them; load them with `ToolSearch` and proceed. The principles ground every trigger here. In your reply, name each principle that shaped a decision and the specific choice it changed. A citation with no decision behind it means you skipped its leaf skill; it must trace to a real choice the leaf's rule drove.
+**Start every multi-step task with a task list whose first item is to read the Principles section below in full.** Use `TaskCreate` for the list and `TaskUpdate` to move each item through `in_progress` and `completed`. Not seeing those tools does not mean the session lacks them; load them with a single `ToolSearch` for `select:TaskCreate,TaskUpdate,TaskList` and proceed. If that exact search comes back empty, the session really is without them: keep the same list in your reply and hold it to the same discipline. The list is the medium, never the rule, and its absence is not grounds to announce a degraded mode. The principles ground every trigger here. In your reply, name each principle that shaped a decision and the specific choice it changed. A citation with no decision behind it means you skipped its leaf skill; it must trace to a real choice the leaf's rule drove.
 
 **Read `references/model-roles.md` before your first delegation.** It maps each role to a model and an effort tier, and defines the review panel seats. `~/.claude/pstack-models.md` overrides it when the user has run `/setup-pstack`.
 
@@ -126,7 +126,9 @@ If the session compacts and you are unsure whether the mode was on, check whethe
 
 The platform gives pstack a few things the upstream Cursor version had to describe in prose. Prefer the mechanism over the description.
 
-Several of the tools named below are deferred: they exist, but their schemas load on demand, so they are absent from your tool list until you ask for them. Absence there is not absence from the session. Load what you need with `ToolSearch` in one call, and never downgrade a playbook because a tool looked missing.
+Several of the tools named below are deferred: they exist, but their schemas load on demand, so they are absent from your tool list until you ask for them. Absence there is rarely absence from the session. Load what you need with one `ToolSearch` call, naming the tools exactly as `select:Name1,Name2` rather than describing them, and never downgrade a playbook because a tool looked missing.
+
+Which tools a session defers does vary, so an empty result from that exact search is occasionally true rather than a lookup you got wrong. Then do the tool's job by hand, say so once in a single clause, and leave the playbook itself intact. Reporting a mode as unavailable is a much worse outcome than carrying one of its mechanisms manually.
 
 - **Task lists.** `TaskCreate` / `TaskUpdate` / `TaskList` are the task list the Non-negotiables demand. A step you skip stays in the list, updated with its `skip: <reason>`, never deleted.
 - **Worktrees.** `isolation: "worktree"` on an `Agent` call gives that subagent its own checkout, cleaned up automatically if it changes nothing. This is the cheap answer to parallel writers. `EnterWorktree` does the same for your own session.
