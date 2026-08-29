@@ -24,6 +24,10 @@ To work on the plugin itself, add your checkout instead of the repo:
 
 The reload reports what registered. Expect 44 skills and 6 agents. The plugin is pure markdown plus two small shell scripts; there is nothing to build.
 
+### Requirements
+
+The skills themselves are markdown and need nothing installed. Two playbooks shell out to bundled TypeScript, and those need **Node 24.2 or newer** on your `PATH`. Babysit runs `scripts/watch-pr/watch-pr` to read PR status, and Orchestrate runs `scripts/orch/orch.ts` for bookkeeping. Both run straight from source on Node's built-in TypeScript support and install their one dependency on first use. Babysit and Shipping also expect the `gh` CLI.
+
 ### Turn on auto-update
 
 Claude Code disables auto-update for third-party marketplaces by default, so a fresh install never changes again on its own. Turn it on once:
