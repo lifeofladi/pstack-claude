@@ -156,7 +156,8 @@ for ag in sorted(ROOT.glob("agents/*.md")):
         errors.append(f"{rel}: invalid effort '{effort}' (want {sorted(VALID_EFFORT)})")
 
 # --- cross references ---
-all_md = [p for p in ROOT.rglob("*.md") if ".git" not in p.parts]
+SKIP_DIRS = {".git", "node_modules"}
+all_md = [p for p in ROOT.rglob("*.md") if SKIP_DIRS.isdisjoint(p.parts)]
 for md in all_md:
     rel = md.relative_to(ROOT)
     text = md.read_text()
