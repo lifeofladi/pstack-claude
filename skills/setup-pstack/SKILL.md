@@ -13,7 +13,7 @@ It writes `~/.claude/pstack-models.md`. Every pstack skill reads that file when 
 
 **Model, yes.** `opus`, `sonnet`, `haiku`, `fable`, or `inherit`. The `Agent` tool takes `model` on every call, so a role's model is always yours to choose.
 
-**Effort, only for the panel seats.** Effort comes from an agent definition's frontmatter, and the `Agent` tool cannot override it per call. The four panel agents ship with their tiers baked in (`pstack:panel-correctness` at `xhigh`, `pstack:panel-design` at `high`, `pstack:panel-evidence` at `xhigh`, `pstack:panel-mechanics` at `high`). To change one, edit that agent file in the plugin. Writing a different effort into `pstack-models.md` records your intent but does not by itself change what runs, so this skill will tell you when a choice needs a file edit instead.
+**Effort, only for the panel seats.** Effort comes from an agent definition's frontmatter, and the `Agent` tool cannot override it per call. The four panel agents ship with their tiers baked in (`pstack:panel-correctness` at `xhigh`, `pstack:panel-design` at `high`, `pstack:panel-evidence` at `xhigh`, `pstack:panel-mechanics` at `high`). To change one, edit that agent's definition file. Writing a different effort into `pstack-models.md` records your intent but does not by itself change what runs, so this skill will tell you when a choice needs a file edit instead.
 
 **Lens, yes, by choosing seats.** Dropping a seat from a panel line removes it. Adding a seat means writing its lens and pointing at an agent that carries it.
 
@@ -87,4 +87,4 @@ interrogate reviewers: opus xhigh correctness, fable high design, sonnet xhigh e
 
 Tell the user what changed from the defaults, in one line per changed role. Say plainly that nothing needs restarting; skills read the file when they run.
 
-If any effort choice needs a plugin agent file edited to take effect, say which file and which line, and offer to make that edit.
+If any effort choice needs an agent definition file edited to take effect, say which file and which line, and offer to make that edit.
