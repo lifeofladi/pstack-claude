@@ -8,7 +8,9 @@ The original is a Cursor plugin. This fork keeps the engineering discipline and 
 
 ## Install
 
-In a Claude Code chat:
+Two ways. The plugin is per machine and updates from git. The account skill (next section) follows your claude.ai account into every session.
+
+As a plugin, in a Claude Code chat:
 
 ```text
 /plugin marketplace add lifeofladi/pstack-claude
@@ -40,6 +42,30 @@ Claude Code disables auto-update for third-party marketplaces by default, so a f
 Claude Code then refreshes after your session starts, within about ten minutes, and prompts you to run `/reload-plugins`. The running session keeps the version it launched with either way.
 
 Without this you stay on the copy you installed until you run `/plugin marketplace update pstack-claude` yourself.
+
+## Install as an account skill
+
+The same library packaged as one claude.ai skill, so it loads in every Claude Code, Cowork, and claude.ai session on your account without a per-machine plugin install.
+
+```bash
+python3 scripts/build-account-skill.py
+```
+
+That writes `dist/pstack.skill`. Upload it in claude.ai under Settings, Capabilities, Skills, or click **Save skill** when Claude hands you the file in a chat. Rebuild and re-upload after editing anything under `skills/` or `agents/`.
+
+What differs from the plugin:
+
+- **One skill, named `pstack`.** A claude.ai skill holds exactly one `SKILL.md`, so the build generates a router that indexes all 44 skills as `skills/<name>/<name>.md`. `/pstack interrogate this` or plain "interrogate this" reach the same file `/interrogate` did. The skill's description carries every trigger phrase, since it is the only text in context before the skill loads.
+- **Agents install on first use.** A skill cannot register subagents, so the six definitions ship in `agents/` and the first dispatch runs `scripts/install-agents.sh`, which copies them into `~/.claude/agents/`. From the next session on, `subagent_type: "panel-correctness"` resolves with its effort tier baked in. Until then the seat runs on `general-purpose` with the same body and model, and the effort tier requested in the prompt.
+- **Uninstall the plugin once the skill is saved.** With both present Claude has two copies of every skill to pick from and tends to pick the plugin's.
+
+The build is a transform of the plugin tree, not a second copy to maintain. It strips the `pstack:` agent namespace, rewrites links between skills, applies a short list of exact-match patches for plugin-only wording, and fails on any broken reference, so the plugin stays the single source.
+
+To try a build locally before uploading, symlink it as a user skill and remove the link when done:
+
+```bash
+ln -s "$PWD/dist/pstack" ~/.claude/skills/pstack
+```
 
 ## Get started
 
@@ -141,6 +167,8 @@ python3 scripts/validate-plugin.py
 ```
 
 Checks the manifest, every skill and agent's frontmatter, cross-file references, relative links, and that no Cursor-era construct survived. Run it after editing anything.
+
+`python3 scripts/build-account-skill.py` validates the account-skill package the same way and exits non-zero on a broken reference or a patch that no longer matches.
 
 ## Not ported
 
