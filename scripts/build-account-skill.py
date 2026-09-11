@@ -102,14 +102,14 @@ Sub-skills dispatch these agents by name in `subagent_type`. Each one's lens, mo
 |---|---|---|---|
 {agents}
 
-A skill cannot register agents, so check the session's list of available agent types before the first dispatch and resolve each `subagent_type` this way.
+A skill cannot register agents, and Claude Code discovers agent files once, at process start. A file copied in mid-session, even from a `SessionStart` hook, is not seen until the next session. So check the session's list of available agent types before the first dispatch and resolve each `subagent_type` this way.
 
-- The name is in the list. Use it as written. That is the state once `scripts/install-agents.sh` has run and a new session has started.
+- The name is in the list. Use it as written.
 - The name is not in the list. Spawn `subagent_type: "general-purpose"` and set both of these on the call.
   1. `model`, from the table. Never omit it. `general-purpose` carries no model of its own, and a seat on the wrong model loses the diversity the panel depends on. `inherit` is the one value that means omit it.
   2. The prompt, in this order. The body of `agents/<name>.md`. The line `pstack skill directory: <this skill's base directory>`. The effort tier from the table, as an instruction, since the `Agent` tool cannot set effort per call. Then the task, as file pointers rather than pasted contents.
 
-  Then run `bash scripts/install-agents.sh` once so the next session resolves the names directly. It copies `agents/*.md` into `~/.claude/agents/` and overwrites the same six files on re-runs. Tell the user in one line that it ran.
+  Then make the next session better. On a machine the user keeps, run `bash scripts/install-agents.sh` once; it copies `agents/*.md` into `~/.claude/agents/` and overwrites the same six files on re-runs. In a cloud container that install evaporates with the container, so offer `bash scripts/install-agents.sh --project` instead, which writes the six files to the repo's `.claude/agents/` for the user to commit. That is a change to their repo, so offer it once rather than running it unasked. Tell the user in one line what ran or what you are offering.
 
 Every prompt to a pstack agent names this skill's base directory, whichever route spawned it. The agent reads `skills/poteto-mode/poteto-mode.md` and the leaf principle files from there.
 
