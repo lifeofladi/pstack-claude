@@ -6,9 +6,15 @@ sub-skill files at skills/<name>/<name>.md and a generated SKILL.md routes to
 them. Agents ship as installable definitions under agents/ because a skill
 cannot register subagents itself.
 
+Each non-principle skill also becomes a thin alias skill under aliases/, one
+slash command each, whose only instruction is to hand the request to pstack.
+Saving an alias restores the plugin's `/poteto-mode` form; the bundle stays
+the single source.
+
 Usage: python3 scripts/build-account-skill.py [output-dir]
-Writes <output-dir>/pstack/ and <output-dir>/pstack.skill (default: dist/).
-Exit code 0 when the package validates, 1 otherwise.
+Writes <output-dir>/pstack/, <output-dir>/pstack.skill, and
+<output-dir>/aliases/<name>.skill (default: dist/).
+Exit code 0 when every package validates, 1 otherwise.
 """
 import json
 import os
@@ -22,6 +28,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT_DIR = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "dist").resolve()
 OUT = OUT_DIR / "pstack"
 ZIP = OUT_DIR / "pstack.skill"
+ALIASES = OUT_DIR / "aliases"
 
 IGNORE = shutil.ignore_patterns("node_modules", ".DS_Store", "__pycache__")
 
@@ -120,6 +127,16 @@ Every prompt to a pstack agent names this skill's base directory, whichever rout
 ## Requirements
 
 The markdown needs nothing installed. Two playbooks, Babysit and Orchestrate, run bundled TypeScript on Node 24.2 or newer, and the scripts install their one dependency on first run. Babysit and Shipping expect the `gh` CLI.
+"""
+
+ALIAS = """---
+name: {name}
+description: {description}
+---
+
+# {name}
+
+This is an entry point into the `pstack` skill, which bundles all of pstack. Do not do the work here. Invoke `pstack` through the Skill tool now, with args `{name}` followed by the user's request verbatim, and follow what it loads. The skill listing may show it as `anthropic-skills:pstack`; use the name exactly as listed. If no `pstack` skill is listed, say so and stop, since this alias has no body of its own.
 """
 
 errors: list[str] = []
@@ -280,13 +297,36 @@ if errors:
         print(f"  ERROR {e}")
     sys.exit(1)
 
+# --- aliases ---
+if ALIASES.exists():
+    shutil.rmtree(ALIASES)
+alias_names = [n for n in skills if n not in principles]
+for name in alias_names:
+    (ALIASES / name).mkdir(parents=True)
+    (ALIASES / name / "SKILL.md").write_text(
+        ALIAS.format(name=name, description=json.dumps(skills[name])))
+    if len(skills[name]) > 1024 or "<" in skills[name] or ">" in skills[name]:
+        errors.append(f"aliases/{name}: description invalid for upload")
+
+if errors:
+    print(f"{len(errors)} error(s):")
+    for e in errors:
+        print(f"  ERROR {e}")
+    sys.exit(1)
+
 # --- package ---
-with zipfile.ZipFile(ZIP, "w", zipfile.ZIP_DEFLATED) as zf:
-    for path in sorted(OUT.rglob("*")):
-        if path.is_file():
-            zf.write(path, path.relative_to(OUT.parent))
+def package(folder: pathlib.Path, target: pathlib.Path) -> None:
+    with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as zf:
+        for path in sorted(folder.rglob("*")):
+            if path.is_file():
+                zf.write(path, path.relative_to(folder.parent))
+
+package(OUT, ZIP)
+for name in alias_names:
+    package(ALIASES / name, ALIASES / f"{name}.skill")
 
 print(f"sub-skills: {len(skills)}   agents: {len(agents)}   "
       f"router: {router.count(chr(10))} lines   description: {len(DESCRIPTION)} chars")
 print(f"{OUT}")
 print(f"{ZIP}  ({ZIP.stat().st_size // 1024} KB)")
+print(f"{ALIASES}/<name>.skill  ({len(alias_names)} aliases: {', '.join(alias_names)})")
